@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, FormEvent, useCallback } from 'react'
-import Navbar from '../components/NavBar'
-import CustomSelect from '../components/CustomSelect'
+import { useState, FormEvent, useCallback, useEffect } from 'react'
+import Navbar from '@/components/NavBar'
+import CustomSelect from '@/components/CustomSelect'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -14,10 +14,19 @@ interface DataItem {
   id: string[];
   text: string[];
 }
-export default function Home() {
+export default function Home({ params }: { params: Promise<{ uuid: string }>}) {
+  const [uuid, setUuid] = useState<string | null>(null); // Estado para almacenar el UUID
 
-const municipios: DataItem[] = jsonData;
-const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+  // Resuelve la promesa de params
+  useEffect(() => {
+    params.then((resolvedParams) => {
+      setUuid(resolvedParams.uuid);
+    });
+  }, [params]);
+
+  const municipios: DataItem[] = jsonData;
+
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const [formData, setFormData] = useState({
     recipientName: '',
@@ -46,15 +55,14 @@ const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    // const response = await fetch(`${API_URL}/sendGuide`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(formData)
-    // })
+    const response = await fetch(`${API_URL}/sendGuide/${uuid}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
 
     // Simular envío al servidor
-    await new Promise(resolve => setTimeout(resolve, 2000))
-
+    
     setIsLoading(false)
   }
 
@@ -143,7 +151,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
               options={municipios}
               onSelect={handleSelectChange}
               placeholder="Seleccione un municipio"
-            
+
             />
           </div>
           <Button
@@ -165,5 +173,3 @@ const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     </div>
   )
 }
-
-
