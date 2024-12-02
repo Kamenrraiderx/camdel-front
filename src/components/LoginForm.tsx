@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie';
 import { motion } from 'framer-motion'
 import { User, Lock } from 'lucide-react'
-import { login } from '@/app/lib/auth'
 
 export default function LoginForm() {
     const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -33,7 +32,7 @@ export default function LoginForm() {
             }
 
         } catch (err) {
-            setError('Credenciales inválidas')
+            setError(`Credenciales inválidas ${err}`)
         }
     }
 

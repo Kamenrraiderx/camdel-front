@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import Navbar from "@/components/NavBar"
-import { logout } from '../lib/auth'
 import { redirect } from 'next/navigation'
 import Cookies from 'js-cookie';
 
@@ -19,20 +18,7 @@ interface Link {
     active: boolean
 }
 const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-// Simulación de una llamada al backend para generar un link
-async function generateLink(title: string, duration: string, purpose: string): Promise<Link> {
-    const token = Cookies.get('sesion');
-    const response = await fetch(`${API_URL}/create-link`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-            body: JSON.stringify({ titulo: title, duracion: duration, proposito: purpose }),
-        },
-    });
-    const data = await response.json()
-    return data
-}
+
 
 // Simulación de una llamada al backend para obtener los links
 async function getLinks(): Promise<Link[]> {
@@ -81,14 +67,7 @@ export default function AdminPage() {
 
     }, [])
 
-    const handleGenerateLink = async (title: string, duration: string, purpose: string) => {
-        const newLink = await generateLink(title, duration, purpose)
-        const newLinks = [...links, newLink]
-        setLinks(newLinks)
-        console.log(newLinks)
-        console.log(newLink)
-        return newLink
-    }
+
 
     const handleDeleteLink = async (uuid: string) => {
         setLinks(prevLinks => prevLinks.filter(link => link.uuid !== uuid))

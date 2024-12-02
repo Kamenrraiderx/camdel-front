@@ -1,5 +1,5 @@
 //import { cookies } from 'next/headers'; // Lectura y escritura de cookies
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT } from 'jose';
 
 const secretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY);
 

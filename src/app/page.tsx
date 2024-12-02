@@ -17,7 +17,6 @@ interface DataItem {
 export default function Home() {
 
 const municipios: DataItem[] = jsonData;
-const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const [formData, setFormData] = useState({
     recipientName: '',

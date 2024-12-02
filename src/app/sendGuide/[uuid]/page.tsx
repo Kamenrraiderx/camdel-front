@@ -55,7 +55,7 @@ export default function Home({ params }: { params: Promise<{ uuid: string }>}) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    const response = await fetch(`${API_URL}/sendGuide/${uuid}`, {
+    await fetch(`${API_URL}/sendGuide/${uuid}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
