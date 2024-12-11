@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useState } from "react"
+'use client'
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -18,12 +19,22 @@ interface Link {
 }
 
 interface LinkGeneratorFormProps {
-  setLinks: Dispatch<SetStateAction<Link[]>>; 
-  links: Link[];            
+  setLinks: Dispatch<SetStateAction<Link[]>>;
+  links: Link[];
 }
 const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-const FORM_URL = process.env.NEXT_PUBLIC_FORM_URL;
-export function LinkGeneratorForm({ setLinks,links }: LinkGeneratorFormProps) {
+export function LinkGeneratorForm({ setLinks, links }: LinkGeneratorFormProps) {
+  const [FORM_URL, setUrl] = useState("");
+
+  useEffect(() => {
+    // Solo se ejecuta en el cliente
+    if (typeof window !== "undefined") {
+      const currentUrl = window.location.pathname;
+      const cleanedUrl = currentUrl.replace('/admin', '');
+      setUrl(`${window.location.origin}${cleanedUrl}`); 
+      console.log(`${window.location.origin}${cleanedUrl}`)
+    }
+  }, []);
   const [title, setTitle] = useState("")
   const [duration, setDuration] = useState("")
   const [durationUnit, setDurationUnit] = useState("hours")
@@ -43,17 +54,17 @@ export function LinkGeneratorForm({ setLinks,links }: LinkGeneratorFormProps) {
       const response = await fetch(`${API_URL}/create-link`, {
         method: 'POST',
         headers: {
-           'Content-Type': 'application/json',
-           'Authorization': `Bearer ${token}`
-          },
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ titulo: title, proposito: purpose, duracion: `${duration} ${durationUnit}` }),
       });
       const data = await response.json();
-      console.log("Nuevo",data)
-      setLinks([...links,data])
+      console.log("Nuevo", data)
+      setLinks([...links, data])
       setTitle('')
       setDuration('')
-      
+
       setGeneratedLink(`${FORM_URL}/sendGuide/${data.uuid}`)
     } catch (error) {
       console.error("Error generating link:", error)
@@ -117,7 +128,7 @@ export function LinkGeneratorForm({ setLinks,links }: LinkGeneratorFormProps) {
           onChange={(e) => setPurpose(e.target.value)}
         />
       </div>
-      {generatedLink==="" ? (
+      {generatedLink === "" ? (
         <Button type="submit" disabled={isLoading}>
           {isLoading ? "Generando..." : "Generar Link"}
         </Button>
