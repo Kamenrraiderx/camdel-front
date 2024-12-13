@@ -55,12 +55,16 @@ export default function AdminPage() {
 
 
     const [links, setLinks] = useState<Link[]>([])
+    const [valid, setValid] = useState(false)
 
     useEffect(() => {
+
         getSession().then(data => {
+            console.log(data.valid)
             if (!data.valid) {
                 redirect('/auth')
             } else {
+                setValid(true)
                 getLinks().then(setLinks)
             }
         })
@@ -103,7 +107,7 @@ export default function AdminPage() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ active:!active })
+                body: JSON.stringify({ active: !active })
             });
             console.log("Activo", active)
             const data = await response.json();
@@ -125,23 +129,25 @@ export default function AdminPage() {
     return (
         <div className="min-h-screen bg-background">
             <Navbar />
-            <main className="container mx-auto p-4 space-y-8">
-                <h1 className="text-3xl font-bold">Panel de Administrador</h1>
-                <div className="grid gap-8 md:grid-cols-2">
-                    <div>
-                        <h2 className="text-2xl font-semibold mb-4">Generar Link</h2>
-                        <LinkGeneratorForm setLinks={setLinks} links={links} />
+            {valid &&
+                <main className="container mx-auto p-4 space-y-8">
+                    <h1 className="text-3xl font-bold">Panel de Administrador</h1>
+                    <div className="grid gap-8 md:grid-cols-2">
+                        <div>
+                            <h2 className="text-2xl font-semibold mb-4">Generar Link</h2>
+                            <LinkGeneratorForm setLinks={setLinks} links={links} />
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-semibold mb-4">Links Generados</h2>
+                            <LinksTable
+                                links={links}
+                                onDelete={handleDeleteLink}
+                                onToggleStatus={handleToggleStatus}
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <h2 className="text-2xl font-semibold mb-4">Links Generados</h2>
-                        <LinksTable
-                            links={links}
-                            onDelete={handleDeleteLink}
-                            onToggleStatus={handleToggleStatus}
-                        />
-                    </div>
-                </div>
-            </main>
+                </main>
+            }
         </div>
     )
 }

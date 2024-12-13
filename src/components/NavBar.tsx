@@ -6,7 +6,9 @@ export default function Navbar() {
     <nav className="bg-primary text-primary-foreground p-4">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold">CAMDELHN</Link>
-        <div className="flex space-x-4">
+        {/*
+        
+          <div className="flex space-x-4">
           <Link href="/" className="flex items-center hover:text-secondary-foreground transition-colors">
             <Home className="mr-1" size={18} />
             Inicio
@@ -20,6 +22,7 @@ export default function Navbar() {
             Contacto
           </Link>
         </div>
+        */}
       </div>
     </nav>
   )
