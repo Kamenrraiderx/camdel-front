@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Home, Info, Mail } from 'lucide-react'
+//import { Home, Info, Mail } from 'lucide-react'
 
 export default function Navbar() {
   return (
