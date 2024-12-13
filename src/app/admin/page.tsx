@@ -55,16 +55,13 @@ export default function AdminPage() {
 
 
     const [links, setLinks] = useState<Link[]>([])
-    const [valid, setValid] = useState(false)
 
     useEffect(() => {
 
         getSession().then(data => {
-            console.log(data.valid)
             if (!data.valid) {
                 redirect('/auth')
             } else {
-                setValid(true)
                 getLinks().then(setLinks)
             }
         })
@@ -129,7 +126,6 @@ export default function AdminPage() {
     return (
         <div className="min-h-screen bg-background">
             <Navbar />
-            {valid &&
                 <main className="container mx-auto p-4 space-y-8">
                     <h1 className="text-3xl font-bold">Panel de Administrador</h1>
                     <div className="grid gap-8 md:grid-cols-2">
@@ -147,7 +143,6 @@ export default function AdminPage() {
                         </div>
                     </div>
                 </main>
-            }
         </div>
     )
 }
